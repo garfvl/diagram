@@ -141,6 +141,33 @@ local mermaid = {
   end,
 }
 
+--- Ditaa engine
+local ditaa = {
+  line_comment_start = nil,
+  mime_types = mime_types_set{'png', 'svg'},
+  compile = function (self, code)
+    local mime_type = self.mime_type or 'image/svg+xml'
+    local file_extension = extension_for_mimetype[mime_type]
+    return with_temporary_directory("diagram", function (tmpdir)
+      return with_working_directory(tmpdir, function ()
+        local infile = 'diagram.txt'
+        local outfile = 'diagram.' .. file_extension
+        write_file(infile, code)
+        local args = {infile, outfile}
+        if mime_type == 'image/svg+xml' then
+          table.insert(args, '--svg')
+        end
+        pandoc.pipe(
+          self.execpath or 'ditaa',
+          args,
+          ''
+        )
+        return read_file(outfile), mime_type
+      end)
+    end)
+  end,
+}
+
 --- TikZ
 --
 
@@ -228,6 +255,7 @@ local default_engines = {
   mermaid   = mermaid,
   plantuml  = plantuml,
   tikz      = tikz,
+  ditaa     = ditaa,
 }
 
 --
