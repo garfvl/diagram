@@ -4,7 +4,7 @@ DIFF ?= diff
 
 .PHONY: test
 test: test-asymptote test-dot test-mermaid test-plantuml test-tikz \
-	test-no-alt-or-caption
+	test-ditaa test-no-alt-or-caption
 
 test-%: test/test-%.yaml test/input-%.md $(FILTER_FILE)
 	@$(PANDOC) --defaults test/test-$*.yaml | \

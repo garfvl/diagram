@@ -1,0 +1,10 @@
+input-files: ['test/input-ditaa.md']
+filters:
+  - diagram.lua
+to: html
+metadata:
+  pagetitle: Ditaa diagram
+  diagram:
+    cache: false
+variables:
+  document-css: false
