@@ -146,7 +146,7 @@ local ditaa = {
   line_comment_start = nil,
   mime_types = mime_types_set{'png', 'svg'},
   compile = function (self, code)
-    local mime_type = self.mime_type or 'image/svg+xml'
+    local mime_type = self.mime_type or 'image/png'
     local file_extension = extension_for_mimetype[mime_type]
     return with_temporary_directory("diagram", function (tmpdir)
       return with_working_directory(tmpdir, function ()

@@ -6,5 +6,9 @@ metadata:
   pagetitle: Ditaa diagram
   diagram:
     cache: false
+    engine:
+      ditaa:
+        # ubuntu version of dita does not support svg
+        mime-type: image/png
 variables:
   document-css: false

@@ -152,3 +152,38 @@ jobs:
 
       - name: Test
         run: 'make test-tikz'
+
+  Ditaa:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: true
+      matrix:
+        pandoc:
+          - latest
+
+    container:
+      image: pandoc/core:${{ matrix.pandoc }}-ubuntu
+
+    env:
+      DITAA_BIN: /usr/local/bin/ditaa-test
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Install dependencies
+        # Ubuntu ditaa package uses update-binfmts to wrap the jar file
+        # and uses it as an executable. However, this wrapping requires
+        # privileges that are not present in unprivileged containers.
+        # So we have to make our own simple wrapper.
+        run: |
+          apt-get -q --no-allow-insecure-repositories update && \
+          apt-get install --no-install-recommends --assume-yes \
+            make ditaa
+          echo '#!/bin/sh' > $DITAA_BIN
+          echo '/usr/bin/jarwrapper /usr/share/ditaa/ditaa.jar $@' >> $DITAA_BIN
+          chmod +x $DITAA_BIN
+
+      - name: Test
+        run: make test-ditaa
+
